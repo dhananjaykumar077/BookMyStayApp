@@ -1,45 +1,81 @@
-/**
- * MAIN CLASS UseCase1HotelBookingApp
- *
- * Use Case 1: Application Entry & Welcome Message
- *
- * Description:
- * This class represents the entry point of the
- * Hotel Booking Management System.
- *
- * At this stage, the application:
- * - Starts execution from the main() method
- * - Displays a welcome message to the user
- * - Confirms that the system has started successfully
- * - No business logic, data structures, or user input
- *   is implemented in this use case.
- * - The goal is to establish a clear and predictable
- *   application startup point.
- *
- * @author Developer
- * @version 1.0
- */
+import java.util.HashMap;
+import java.util.Map;
+
+// Core Inventory Class (Version 3.0)
+class RoomInventory {
+
+    // HashMap to store room type and availability
+    private HashMap<String, Integer> inventory;
+
+    // Constructor - Initialize inventory
+    public RoomInventory() {
+        inventory = new HashMap<>();
+    }
+
+    // Register room type with count
+    public void addRoomType(String roomType, int count) {
+        inventory.put(roomType, count);
+        System.out.println(roomType + " added with " + count + " rooms.");
+    }
+
+    // Get availability of a specific room type
+    public int getAvailability(String roomType) {
+        return inventory.getOrDefault(roomType, 0);
+    }
+
+    // Update availability (increase/decrease)
+    public void updateAvailability(String roomType, int change) {
+        if (inventory.containsKey(roomType)) {
+            int current = inventory.get(roomType);
+            int updated = current + change;
+
+            if (updated < 0) {
+                System.out.println("Cannot reduce below zero for " + roomType);
+            } else {
+                inventory.put(roomType, updated);
+                System.out.println("Updated " + roomType + " to " + updated);
+            }
+        } else {
+            System.out.println("Room type not found: " + roomType);
+        }
+    }
+
+    // Display full inventory
+    public void displayInventory() {
+        System.out.println("\n--- Current Room Inventory ---");
+        for (Map.Entry<String, Integer> entry : inventory.entrySet()) {
+            System.out.println(entry.getKey() + " : " + entry.getValue());
+        }
+    }
+}
+
+// Main Class to Run Use Case 3
 public class HotelBookingApp {
 
-    /**
-     * Application entry point.
-     *
-     * This method is the first method executed
-     * when the program is launched by the JVM.
-     *
-     * @param args Command-line arguments
-     */
     public static void main(String[] args) {
 
-        // Display welcome message
-        System.out.println("=======================================");
-        System.out.println("   Welcome to Hotel Booking System");
-        System.out.println("=======================================");
+        // Initialize inventory system
+        RoomInventory inventory = new RoomInventory();
 
-        // Confirm system startup
-        System.out.println("System started successfully!");
+        // Register room types
+        inventory.addRoomType("Single", 10);
+        inventory.addRoomType("Double", 5);
+        inventory.addRoomType("Suite", 2);
 
-        // Inform user about current stage
-        System.out.println("Initialization complete. Ready for next use case.");
+        // Display inventory
+        inventory.displayInventory();
+
+        // Check availability
+        System.out.println("\nAvailable Single Rooms: " + inventory.getAvailability("Single"));
+
+        // Update inventory (simulate booking)
+        inventory.updateAvailability("Single", -2);
+        inventory.updateAvailability("Suite", -1);
+
+        // Update inventory (simulate cancellation)
+        inventory.updateAvailability("Double", +1);
+
+        // Display updated inventory
+        inventory.displayInventory();
     }
 }
